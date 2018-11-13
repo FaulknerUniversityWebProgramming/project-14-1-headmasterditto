@@ -44,7 +44,7 @@
                 <div class="mdl-card__supporting-text">
                     <ul class="demo-list-item mdl-list">
 
-                        <?php  
+                        <?php
                             $connectionString = "mysql:host=localhost;dbname=book;port=3306";
                             $user = "root";
                             $pass="";
@@ -56,11 +56,11 @@
                                 while($row = $result->fetch()) {
                                     echo "<li><a href='chapter14-project1.php?s=".$row['EmployeeID']."'>".$row['FirstName']." ".$row['LastName']."</li>";
                                 }
+                                $pdo = null;
                             }
                             catch(PDOException $e){
                                 throw new \PDOException($e->getMessage(), (int)$e->getCode());
-                            }
-                            
+                            };
                         ?>            
 
                     </ul>
@@ -83,19 +83,31 @@
                           <div class="mdl-tabs__panel is-active" id="address-panel">
                               
                            <?php   
-                                
+                                if(isset($_GET)){
+                                    try {
+                                        $pdo = new PDO($connectionString,$user,$pass);
+                                        $sql = "SELECT FirstName, LastName, Address, City, Region, Country, Postal, Email FROM employees WHERE EmployeeID = ".$_GET['s'];
+                                        $result = $pdo->prepare($sql);
+                                        $result->execute();
+                                        while($row = $result->fetch()) {
+                                            echo "<h3>".$row['FirstName']." ".$row['LastName']."</h2>";
+                                            echo $row['Address']."<br />";
+                                            echo $row['City'].", ".$row['Region']."<br />";
+                                            echo $row['Country'].", ".$row['Postal']."<br />";
+                                            echo $row['Email'];
+                                        }
+                                        $pdo = null;
+                                    }
+                                    catch(PDOException $e){
+                                        throw new \PDOException($e->getMessage(), (int)$e->getCode());
+                                    };
+                                };
                            ?>
                            
          
                           </div>
                           <div class="mdl-tabs__panel" id="todo-panel">
-                              
-                               <?php                       
-                                 /* retrieve for selected employee;
-                                    if none, display message to that effect */
-                               ?>                                  
-                            
-                                <table class="mdl-data-table  mdl-shadow--2dp">
+                               <table class="mdl-data-table  mdl-shadow--2dp">
                                   <thead>
                                     <tr>
                                       <th class="mdl-data-table__cell--non-numeric">Date</th>
@@ -106,7 +118,26 @@
                                   </thead>
                                   <tbody>
                                    
-                                    <?php /*  display TODOs  */ ?>
+                                    <?php 
+                                        if(isset($_GET)){
+                                            try {
+                                                $pdo = new PDO($connectionString,$user,$pass);
+                                                $sql = "SELECT EmployeeID, DateBy, Status, Priority, Description FROM employeestodo WHERE EmployeeID = ".$_GET['s']." ORDER BY DateBy";
+                                                $result = $pdo->prepare($sql);
+                                                $result->execute();
+                                                while($row = $result->fetch()) {
+                                                    echo "<tr><td>".$row['DateBy']."</td>";
+                                                    echo "<td>".$row['Status']."</td>";
+                                                    echo "<td>".$row['Priority']."</td>";
+                                                    echo "<td>".$row['Description']."</td></tr>";
+                                                }
+                                                $pdo = null;
+                                            }
+                                            catch(PDOException $e){
+                                                throw new \PDOException($e->getMessage(), (int)$e->getCode());
+                                            };
+                                        };
+                                    ?>
                             
                                   </tbody>
                                 </table>

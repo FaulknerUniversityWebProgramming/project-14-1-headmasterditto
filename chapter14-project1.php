@@ -54,7 +54,7 @@
                                 $result = $pdo->prepare($sql);
                                 $result->execute();
                                 while($row = $result->fetch()) {
-                                    echo "<li>".$row['FirstName']." ".$row['LastName']."</li>";
+                                    echo "<li><a href='chapter14-project1.php?s=".$row['EmployeeID']."'>".$row['FirstName']." ".$row['LastName']."</li>";
                                 }
                             }
                             catch(PDOException $e){
@@ -83,7 +83,7 @@
                           <div class="mdl-tabs__panel is-active" id="address-panel">
                               
                            <?php   
-                             /* display requested employee's information */
+                                
                            ?>
                            
          

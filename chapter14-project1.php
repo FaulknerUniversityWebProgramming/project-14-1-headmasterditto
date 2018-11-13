@@ -1,4 +1,8 @@
-<?php ?>
+<?php
+    function connectDB() {
+        
+    };
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -40,10 +44,24 @@
                 <div class="mdl-card__supporting-text">
                     <ul class="demo-list-item mdl-list">
 
-                         <?php  
-                           /* programmatically loop though employees and display each
-                              name as <li> element. */
-                         ?>            
+                        <?php  
+                            $connectionString = "mysql:host=localhost;dbname=book;port=3306";
+                            $user = "root";
+                            $pass="";
+                            try {
+                                $pdo = new PDO($connectionString,$user,$pass);
+                                $sql = "SELECT  EmployeeID, FirstName, LastName FROM employees ORDER BY LastName";
+                                $result = $pdo->prepare($sql);
+                                $result->execute();
+                                while($row = $result->fetch()) {
+                                    echo "<li>".$row['FirstName']." ".$row['LastName']."</li>";
+                                }
+                            }
+                            catch(PDOException $e){
+                                throw new \PDOException($e->getMessage(), (int)$e->getCode());
+                            }
+                            
+                        ?>            
 
                     </ul>
                 </div>
